@@ -26,7 +26,7 @@ jobs:
         uses: docker/metadata-action@v6.0.0
         with:
           images: |
-            ${{ (secrets.DOCKER_REPOSITORY != '') && secrets.DOCKER_REPOSITORY || '' }}
+            ${{ secrets.DOCKER_REPOSITORY != '' && secrets.DOCKER_REPOSITORY || '' }}
             ${{ secrets.GHCR_REPOSITORY }}
           tags: |
             type=edge,branch=master
