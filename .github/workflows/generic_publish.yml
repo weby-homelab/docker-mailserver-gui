@@ -24,13 +24,10 @@ jobs:
       - name: 'Prepare tags'
         id: prep
         uses: docker/metadata-action@v6.0.0
-        env:
-          DOCKER_REPO: ${{ secrets.DOCKER_REPOSITORY }}
-          GHCR_REPO: ${{ secrets.GHCR_REPOSITORY }}
         with:
           images: |
-            ${{ env.DOCKER_REPO }}
-            ${{ env.GHCR_REPO }}
+            ${{ secrets.DOCKER_REPOSITORY }}
+            ${{ secrets.GHCR_REPOSITORY }}
           tags: |
             type=edge,branch=master
             type=semver,pattern={{major}}
