@@ -21,7 +21,7 @@ COUNT=0
 while [[ ! -d "./snappymail-data/_data_/_default_/domains" ]]; do
     sleep 5
     COUNT=$((COUNT + 1))
-    if [[ $COUNT -ge $MAX_RETRIES ]]; then
+    if [[ ${COUNT} -ge ${MAX_RETRIES} ]]; then
         echo "❌ Error: SnappyMail data directory not found after waiting. Ensure stack is running."
         exit 1
     fi
