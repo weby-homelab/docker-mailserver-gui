@@ -1,0 +1,98 @@
+services:
+  mailserver:
+    image: mailserver/docker-mailserver:latest
+    container_name: dms-core
+    hostname: ${MAIL_HOSTNAME:-mail.example.com}
+    ports:
+      - "25:25"    # SMTP  (explicit TLS => Port 587)
+      - "143:143"  # IMAP4 (explicit TLS => Port 993)
+      - "465:465"  # ESMTP (implicit TLS)
+      - "587:587"  # ESMTP (explicit TLS)
+      - "993:993"  # IMAP4 (implicit TLS)
+    volumes:
+      - ./dms/mail-data:/var/mail
+      - ./dms/mail-state:/var/mail-state
+      - ./dms/mail-logs:/var/log/mail
+      - ./dms/config:/tmp/docker-mailserver
+      - ./dms/ssl:/ssl:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - ENABLE_SPAMASSASSIN=1
+      - ENABLE_CLAMAV=1
+      - ENABLE_FAIL2BAN=1
+      - ENABLE_POSTGREY=0
+      - ONE_DIR=1
+      - LOG_LEVEL=info
+      - SSL_TYPE=manual
+      - SSL_CERT_PATH=/ssl/certs/${MAIL_HOSTNAME:-mail.example.com}.crt
+      - SSL_KEY_PATH=/ssl/private/${MAIL_HOSTNAME:-mail.example.com}.key
+    networks:
+      - secure-mail-network
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mail.rule=Host(`${MAIL_HOSTNAME:-mail.example.com}`)"
+      - "traefik.http.routers.mail.entrypoints=websecure"
+      - "traefik.http.routers.mail.tls.certresolver=letsencrypt"
+      - "traefik.http.services.mail.loadbalancer.server.port=80"
+
+  webmail:
+    image: djmaze/snappymail:latest
+    container_name: dms-snappymail
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TZ:-UTC}
+    volumes:
+      - ./snappymail-data:/var/lib/snappymail
+    networks:
+      - secure-mail-network
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.webmail.rule=Host(`${WEBMAIL_HOSTNAME:-webmail.example.com}`)"
+      - "traefik.http.routers.webmail.entrypoints=websecure"
+      - "traefik.http.routers.webmail.tls.certresolver=letsencrypt"
+
+  traefik:
+    image: traefik:latest
+    container_name: dms-traefik
+    environment:
+      - DOCKER_API_VERSION=1.41
+    command:
+      - "--api.insecure=false"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL:-admin@example.com}"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik-data:/letsencrypt
+    networks:
+      - secure-mail-network
+    restart: unless-stopped
+
+  cert-dumper:
+    image: ldez/traefik-certs-dumper:latest
+    container_name: dms-cert-dumper
+    command: file --version v2 --watch --source /traefik/acme.json --dest /ssl --post-hook "docker exec dms-core postfix reload && docker exec dms-core dovecot reload"
+    volumes:
+      - ./traefik-data:/traefik:ro
+      - ./dms/ssl:/ssl
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: unless-stopped
+    networks:
+      - secure-mail-network
+
+networks:
+  secure-mail-network:
+    name: secure-mail-network
