@@ -36,7 +36,4 @@ jobs:
     uses: ./.github/workflows/generic_publish.yml
     with:
       cache-key: ${{ needs.build-image.outputs.build-cache-key }}
-      docker-username: ${{ secrets.DOCKER_USERNAME }}
-      docker-password: ${{ secrets.DOCKER_PASSWORD }}
-      docker-token: ${{ secrets.DOCKER_TOKEN }}
     secrets: inherit
