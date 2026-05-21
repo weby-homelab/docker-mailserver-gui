@@ -23,6 +23,26 @@ However, users often need a Webmail interface to check emails without configurin
 
 **`docker-mailserver-gui` solves this by introducing a microservices-based, Zero Trust architecture.**
 
+## ⚡ Key Advantages Over Standard docker-mailserver
+
+While the upstream [docker-mailserver](https://github.com/docker-mailserver/docker-mailserver) is a stellar mail engine, deploying it with a web interface typically requires hours of manual integration, reverse proxy configuration, and certificate mapping. Here is how `docker-mailserver-gui` elevates the deployment experience:
+
+| Feature / Aspect | Upstream `docker-mailserver` | `docker-mailserver-gui` Stack |
+| :--- | :--- | :--- |
+| **Web Mail Access** | ❌ CLI only. User must manually deploy and connect a webmail app. | ✉️ Ready-to-use, db-less SnappyMail client. |
+| **SSL/TLS Sync** | ⚠️ Requires manual post-hook scripting or volume hacking to reload certs. | 🔄 Automated `cert-dumper` sidecar reloads postfix/dovecot on new certs. |
+| **Network Security** | 🔓 Port exposure depends entirely on manual host rules. | 🔒 Isolated private Docker network. Webmail has no direct internet exposure. |
+| **Reverse Proxy** | ❌ None. Manual SSL/HTTPS provisioning required. | 🛡️ Integrated Traefik v3 proxy with automatic Let's Encrypt. |
+| **Persistence** | ⚠️ Anonymous webmail volumes easily lead to configuration loss. | 💾 Explicitly mapped, permission-hardened `./snappymail-data` directory. |
+| **Default Credentials** | ⚠️ Supervisor UNIX socket relies on fallback default passwords. | 🚫 Strictly enforced **Zero Fallback Credentials** security model. |
+
+### 🔍 Detailed Benefits Breakdown:
+
+1. **DB-less, High-Performance Webmail (SnappyMail):** Unlike heavy webmail clients (e.g. SOGo, Roundcube) that require Postgres/MySQL and extensive CPU/RAM overhead, our stack integrates **SnappyMail**. It runs entirely without a database, saving system memory while delivering a lightning-fast, modern SPA web interface.
+2. **Automated SSL/TLS Certificate Synchronization:** Upstream DMS leaves SSL configuration to the user. In our stack, `dms-cert-dumper` monitors the reverse proxy's `acme.json` file. When Let's Encrypt renews a certificate, the sidecar extracts it, updates the mail server directories, and safely reloads Postfix/Dovecot daemons in real-time with zero downtime.
+3. **True Container Isolation (Zero Trust):** Webmail clients are common targets for remote exploits. By separating the web server (`dms-traefik`), webmail engine (`dms-snappymail`), and mail delivery agent (`dms-core`), an exploit in the web client cannot compromise your mail storage or private key directories.
+4. **Hardened for Production Out-of-the-Box:** Includes built-in workarounds for modern Docker engines (Docker 29+ `DOCKER_API_VERSION` adjustments), instant inbound delivery configuration (bypassable greylisting), and GPG-signed release integrity.
+
 ## 🛡️ Architecture & Security Model
 
 We strictly adhere to a **Zero Fallback Credentials** mandate. This project is orchestrated using Docker Compose to ensure strict container isolation. 
