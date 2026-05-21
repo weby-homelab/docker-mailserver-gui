@@ -1,6 +1,6 @@
 services:
   mailserver:
-    image: mailserver/docker-mailserver:latest
+    image: webyhomelab/docker-mailserver-gui:latest
     container_name: dms-core
     hostname: ${MAIL_HOSTNAME:-mail.example.com}
     ports:
