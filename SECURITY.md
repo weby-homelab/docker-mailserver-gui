@@ -33,6 +33,6 @@ We aim to acknowledge all reports within 48 hours and provide a fix or mitigatio
 
 ## Security Audit Status
 
-- **Static Analysis:** The codebase is regularly scanned with `hadolint`, `shellcheck`, and `eclint`.
-- **Dependency Scanning:** We use `OSV-Scanner` and GitHub dependabot to monitor for vulnerable packages.
-- **Manual Audit:** The `supervisord.conf` and `setup.sh` scripts have been manually audited for credential leaks as of May 2026.
+- **Static Analysis:** The codebase is regularly scanned with `hadolint`, `shellcheck`, and `eclint` to ensure shell scripts and Dockerfiles adhere to security guidelines.
+- **Dependency Scanning:** We use `OSV-Scanner`, GitHub Dependabot, and vulnerability-scan actions to monitor for CVEs in base images and packages.
+- **Manual Audit:** The `supervisord.conf` process manager and `setup-gui.sh` configuration scripts have been manually audited for privilege escalation paths and credential leaks as of the `v0.9.6` release in May 2026.

@@ -69,6 +69,19 @@ flowchart LR
 
 ---
 
+## 📸 Interface Preview
+
+<p align="center">
+  <img src="docker-mailserver-gui-1.png" alt="Docker Mailserver GUI - Webmail Login Screen" width="48%">
+  <img src="docker-mailserver-gui-2.png" alt="Docker Mailserver GUI - Mailbox Inbox Interface" width="48%">
+</p>
+<p align="center">
+  <img src="docker-mailserver-gui-3.png" alt="Docker Mailserver GUI - Email Composition View" width="48%">
+  <img src="docker-mailserver-gui-4.png" alt="Docker Mailserver GUI - Settings and Account Configuration" width="48%">
+</p>
+
+---
+
 ## 🚀 Quick Start
 
 Deploying your secure mail server takes less than 5 minutes.
@@ -113,9 +126,15 @@ docker exec -ti dms-core setup email add user@yourdomain.com <password>
 - **Instant Inbound:** `Postgrey` (greylisting) is disabled by default to allow immediate email delivery without the standard 10-minute delay.
 - **Docker 29+ Compatibility:** Explicitly configured Traefik with `DOCKER_API_VERSION=1.41` to support modern container engines.
 - **No Hardcoded Passwords:** The Supervisor UNIX socket credentials have been removed to prevent local privilege escalation.
-- **Automatic Sync:** SSL certificates are reloaded automatically by the dumper without stopping the mail server.
+- **Automatic SSL Sync:** SSL certificates are monitored and reloaded automatically by the `dms-cert-dumper` sidecar using a highly robust `alpine:3.18`-based image equipped with `docker-cli`.
+- **Persistent Webmail Config:** SnappyMail data is explicitly persisted to `./snappymail-data` on the host, preventing the loss of settings/accounts across restarts.
+- **Dual Registry Publishing:** Automatic package deployment publishes container images to both GitHub Container Registry (GHCR) and Docker Hub (`webyhomelab/docker-mailserver-gui`).
 
 ---
+
+### ⚖️ Legal Disclaimer
+
+*All product names, logos, brands, and trademarks referenced in this repository are the property of their respective owners. All company, product, and service names used in this project are for identification purposes only. Use of these names, logos, and brands does not imply endorsement.*
 
 <br>
 <p align="center">

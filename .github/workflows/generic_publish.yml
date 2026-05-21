@@ -24,9 +24,12 @@ jobs:
       - name: 'Prepare tags'
         id: prep
         uses: docker/metadata-action@v6.0.0
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         with:
           images: |
             ghcr.io/${{ github.repository }}
+            ${{ env.DOCKER_USERNAME != '' && 'webyhomelab/docker-mailserver-gui' || '' }}
           tags: |
             type=edge,branch=master
             type=semver,pattern={{major}}
