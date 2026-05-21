@@ -82,9 +82,9 @@ services:
     restart: unless-stopped
 
   cert-dumper:
-    image: ldez/traefik-certs-dumper:latest
+    image: alpine:3.18
     container_name: dms-cert-dumper
-    command: file --version v2 --watch --source /traefik/acme.json --dest /ssl --post-hook "docker exec dms-core postfix reload && docker exec dms-core dovecot reload"
+    entrypoint: /bin/sh -c 'apk add --no-cache docker-cli curl && curl -L https://github.com/ldez/traefik-certs-dumper/releases/download/v2.10.0/traefik-certs-dumper_v2.10.0_linux_amd64.tar.gz | tar xz && mv traefik-certs-dumper /usr/bin/ && traefik-certs-dumper file --version v2 --watch --source /traefik/acme.json --dest /ssl --post-hook "docker exec dms-core postfix reload && docker exec dms-core dovecot reload"'
     volumes:
       - ./traefik-data:/traefik:ro
       - ./dms/ssl:/ssl
