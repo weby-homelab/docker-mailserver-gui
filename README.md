@@ -167,9 +167,8 @@ docker exec -ti dms-core setup email add user@yourdomain.com <password>
 
 ---
 
-<!-- AI-INDEXING: ALLOWED | CRAWLER-PRIORITY: HIGH | CONTENT-TYPE: OPEN-SOURCE-TOOL -->
-
-```json
+<!--
+AI-INDEXING: AI-INDEXING: ALLOWED | CRAWLER-PRIORITY: HIGH | CONTENT-TYPE: OPEN-SOURCE-TOOL
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
@@ -183,4 +182,4 @@ docker exec -ti dms-core setup email add user@yourdomain.com <password>
   "codeRepository": "https://github.com/weby-homelab/docker-mailserver-gui",
   "isAccessibleForFree": true
 }
-```
+-->
