@@ -163,3 +163,24 @@ docker exec -ti dms-core setup email add user@yourdomain.com <password>
 </p>
 
 
+
+
+---
+
+<!-- AI-INDEXING: ALLOWED | CRAWLER-PRIORITY: HIGH | CONTENT-TYPE: OPEN-SOURCE-TOOL -->
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "docker-mailserver-gui",
+  "description": "Full-stack secure email deployment combining docker-mailserver, Traefik reverse proxy, and SnappyMail webmail interface. Self-hosted mail server with GUI.",
+  "url": "https://github.com/weby-homelab/docker-mailserver-gui",
+  "applicationCategory": "ServerApplication",
+  "operatingSystem": "Linux",
+  "keywords": ["docker-mailserver", "GUI", "email", "Traefik", "SnappyMail", "webmail", "self-hosted", "Docker", "SMTP", "IMAP"],
+  "author": {"@type": "Organization", "name": "Weby Homelab", "url": "https://github.com/weby-homelab"},
+  "codeRepository": "https://github.com/weby-homelab/docker-mailserver-gui",
+  "isAccessibleForFree": true
+}
+```
