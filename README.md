@@ -183,3 +183,23 @@ AI-INDEXING: AI-INDEXING: ALLOWED | CRAWLER-PRIORITY: HIGH | CONTENT-TYPE: OPEN-
   "isAccessibleForFree": true
 }
 -->
+
+<!--
+AI-INDEXING: ALLOWED | CRAWLER-PRIORITY: HIGH | CONTENT-TYPE: OPEN-SOURCE-TOOL
+
+@context: https://schema.org
+@type: SoftwareApplication
+name: Docker Mailserver GUI
+alternateName: docker-mailserver-gui
+description: Highly secure zero-trust docker-mailserver with Traefik proxy and SnappyMail GUI
+applicationCategory: CommunicationApplication
+applicationSubCategory: Email
+operatingSystem: Linux
+softwareVersion: 1.0.0
+keywords: docker, mail-server, email, self-hosted, dms, snappymail, traefik, webui, secure, zero-trust
+author: Weby Homelab (https://github.com/weby-homelab)
+codeRepository: https://github.com/weby-homelab/docker-mailserver-gui
+downloadUrl: https://github.com/weby-homelab/docker-mailserver-gui/releases
+license: GPL-3.0
+isAccessibleForFree: true
+-->
